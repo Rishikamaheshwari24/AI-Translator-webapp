@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multilingual AI Translator</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Poppins',sans-serif;
+    background: linear-gradient(135deg,#4facfe,#00f2fe);
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.container{
+    width:420px;
+    background:white;
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 15px 40px rgba(0,0,0,0.25);
+    transition:0.3s;
+}
+
+.container:hover{
+    transform:translateY(-5px);
+}
+
+h2{
+    text-align:center;
+    margin-bottom:20px;
+    color:#333;
+}
+
+label{
+    font-size:14px;
+    font-weight:500;
+    color:#444;
+}
+
+select{
+    width:100%;
+    padding:8px;
+    margin:8px 0 12px 0;
+    border-radius:6px;
+    border:1px solid #ccc;
+}
+
+textarea{
+    width:100%;
+    height:120px;
+    padding:10px;
+    border-radius:8px;
+    border:1px solid #ccc;
+    resize:none;
+    font-size:14px;
+    margin-top:10px;
+}
+
+textarea:focus{
+    border-color:#4facfe;
+    outline:none;
+}
+
+button{
+    width:100%;
+    padding:10px;
+    margin-top:10px;
+    border:none;
+    border-radius:8px;
+    font-size:15px;
+    cursor:pointer;
+    background:linear-gradient(135deg,#667eea,#764ba2);
+    color:white;
+    transition:0.3s;
+}
+
+button:hover{
+    transform:scale(1.03);
+}
+
+.swap{
+    background:#f1f1f1;
+    color:#333;
+}
+
+.swap:hover{
+    background:#e2e2e2;
+}
+
+.result{
+    background:#f8f9fa;
+    padding:12px;
+    border-radius:8px;
+    min-height:40px;
+    font-size:15px;
+    border:1px solid #ddd;
+    margin-top:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>🌍 AI Language Translator</h2>
+
+<form action="" method="post">
+
+<label>Source Language</label>
+
+<select id="source_lang" name="source_lang">
+{% for lang,code in languages.items() %}
+<option value="{{code}}">{{lang}}</option>
+{% endfor %}
+</select>
+
+<button class="swap" type="button" onclick="swapLanguages()">⇄ Swap Languages</button>
+
+<label>Target Language</label>
+
+<select id="target_lang" name="target_lang">
+{% for lang,code in languages.items() %}
+<option value="{{code}}">{{lang}}</option>
+{% endfor %}
+</select>
+
+<button type="button" onclick="startSpeech()">🎤 Speak</button>
+
+<textarea id="data" name="data" placeholder="Enter text here..." required></textarea>
+
+<button type="submit">Translate</button>
+
+</form>
+
+<h4 style="margin-top:20px;">Result</h4>
+
+<div class="result">
+{{ translated_text }}
+</div>
+
+<button onclick="copyText()">📋 Copy</button>
+
+</div>
+
+<script>
+
+function startSpeech(){
+const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+recognition.lang="en-US";
+recognition.start();
+
+recognition.onresult=function(event){
+document.getElementById("data").value = event.results[0][0].transcript;
+};
+}
+
+function swapLanguages(){
+
+let source=document.getElementById("source_lang");
+let target=document.getElementById("target_lang");
+
+let temp=source.value;
+source.value=target.value;
+target.value=temp;
+
+}
+
+function copyText(){
+
+let text=document.querySelector(".result").innerText;
+navigator.clipboard.writeText(text);
+
+alert("Translated text copied!");
+
+}
+
+</script>
+
+</body>
+</html>
